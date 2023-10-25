@@ -1,0 +1,28 @@
+logging:
+  level:
+    ROOT: debug
+
+# database
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/mysql?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    username: root
+    password: Jeong!9702
+
+  # spring data jpa
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL57Dialect
+    open-in-view: false
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+
+external-api:
+  kakao:
+    api-key: 9ff86ea6c7798eab49708f0ffb11e365
+    location: https://dapi.kakao.com
+  naver:
+    location: https://openapi.naver.com
+    client-id: wIuJiaWdkLcoAa1wKTRS
+    client-secret: 6FoGaHO5um

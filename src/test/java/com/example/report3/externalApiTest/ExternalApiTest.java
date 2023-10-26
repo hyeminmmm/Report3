@@ -1,37 +1,45 @@
 package com.example.report3.externalApiTest;
 
 import com.example.report3.common.enums.KakaoApiResponseEnum;
+import com.example.report3.common.enums.NaverApiResponseEnum;
 import com.example.report3.common.exception.CommonException;
 import com.example.report3.common.resultcode.CommonApiResultCode;
+import com.example.report3.serviceapi.searchLocation.adapter.in.dto.SearchLocationDto;
+import com.example.report3.serviceapi.searchLocation.application.port.in.SearchLocationUseCase;
 import com.example.report3.serviceapi.searchLocation.application.port.in.client.dto.KakaoLocationDto;
 import com.example.report3.serviceapi.searchLocation.application.port.in.client.dto.NaverLocationDto;
-import com.example.report3.serviceapi.searchLocation.application.port.in.client.kakao.SearchKakaoLocationClient;
-import com.example.report3.serviceapi.searchLocation.application.port.in.client.naver.SearchNaverLocationClient;
+import com.example.report3.serviceapi.searchLocation.application.port.in.client.kakao.SearchLocationKakaoClient;
+import com.example.report3.serviceapi.searchLocation.application.port.in.client.naver.SearchLocationNaverClient;
+import com.example.report3.serviceapi.searchLocation.application.port.out.SearchLocationPort;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.FeignException;
 import lombok.extern.slf4j.Slf4j;
-import org.json.JSONException;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 @SpringBootTest
 @Slf4j
-public class KakaoApiTest {
+public class ExternalApiTest {
 
     @Autowired
-    SearchKakaoLocationClient searchKakaoLocationClient;
+    SearchLocationKakaoClient searchLocationKakaoClient;
 
     @Autowired
-    SearchNaverLocationClient searchNaverLocationClient;
+    SearchLocationNaverClient searchLocationNaverClient;
+
+    @Autowired
+    SearchLocationUseCase searchLocationUseCase;
+
+    @Autowired
+    SearchLocationPort searchLocationPort;
 
     @Value("${external-api.kakao.api-key}")
     String apiKey;
@@ -48,10 +56,10 @@ public class KakaoApiTest {
         KakaoLocationDto.SearchKakaoLocationResponse search;
         String keyword = "곱창";
         try {
-            search = searchKakaoLocationClient.getKakaoLocation(authorization,keyword, 5);
+            search = searchLocationKakaoClient.getKakaoLocation(authorization,keyword, 5);
         } catch (FeignException e) {
             KakaoApiResponseEnum exceptionResult = KakaoApiResponseEnum.getExceptionResult(String.valueOf(e.status()));
-            throw new CommonException(exceptionResult.getDescription(), CommonApiResultCode.COMMON_SUCCESS_WITHOUT_MESSAGE);
+            throw new CommonException(exceptionResult.getDescription(), CommonApiResultCode.COMMON_SUCCESS_WITHOUT_MESSAGE, e.getMessage());
         }
 
         Assertions.assertEquals(keyword, search.meta().sameName().keyword());
@@ -62,9 +70,10 @@ public class KakaoApiTest {
         String keyword = "곱창";
         String naverLocation = "";
         try {
-            naverLocation = searchNaverLocationClient.getNaverLocation(clientId+"dfd", clientSecret, keyword, 5);
+            naverLocation = searchLocationNaverClient.getNaverLocation(clientId, clientSecret, keyword, 5);
         } catch (FeignException e) {
-            log.info("dfsfd");
+            NaverApiResponseEnum exceptionResult = NaverApiResponseEnum.getExceptionResult(String.valueOf(e.status()));
+            throw new CommonException(exceptionResult.getDescription(), CommonApiResultCode.COMMON_FAIL_WITHOUT_MESSAGE, e.getMessage());
         }
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -107,6 +116,15 @@ public class KakaoApiTest {
             result.add(naverLocation);
         });
 
-        log.info(result.toString());
+        Assertions.assertEquals(result.get(0), "카카오뱅크");
     }
+
+    @Test
+    public void 통합테스트() throws JsonProcessingException {
+        String keyword = "곱창";
+        SearchLocationDto.SearchLocationResponse searchLocation = searchLocationUseCase.getSearchLocation(keyword);
+
+        log.info(searchLocation.locations().toString());
+    }
+
 }

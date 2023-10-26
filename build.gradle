@@ -34,9 +34,11 @@ dependencies {
     testAnnotationProcessor 'org.projectlombok:lombok' ///@Slf4j 로그 적용시  log symbol
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     runtimeOnly 'com.mysql:mysql-connector-j'
-    implementation "org.springframework.cloud:spring-cloud-starter-openfeign"
-    implementation group: 'com.squareup.okhttp', name: 'okhttp', version: '2.7.5'
+    implementation "org.springframework.cloud:spring-cloud-starter-openfeign"   //feign client 사용
+    implementation group: 'com.squareup.okhttp', name: 'okhttp', version: '2.7.5'   //feign client configuration 설정 시 사용
     implementation group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1' //네이버 검색 api 사용 시 Json 파싱
+    implementation 'org.mapstruct:mapstruct:1.5.3.Final'        //매퍼
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.3.Final'
 
 }
 

@@ -7,13 +7,13 @@ public enum KakaoApiResponseEnum {
     FAIL_REQUEST("처리 오류"),
     FAIL_TOKEN_AUTHORITY("토큰 인증 오류"),
     FAIL_AUTHORITY("권한 오류"),
-    TOO_MANY_QUARTER("쿼터 초과"),
+    TOO_MANY_QUARTER("호출 한도 초과"),
     FAIL_SERVER_SYSTEM("내부 시스템 오류"),
     FAIL_GATEWAY("게이트웨이 오류"),
     SERVICE_UNAVAILABLE("시스템 점검 중"),
     FAIL_UNKNOWN("알 수 없는 오류");
 
-    String description;
+    final String description;
     KakaoApiResponseEnum(String description) {
         this.description = description;
     }

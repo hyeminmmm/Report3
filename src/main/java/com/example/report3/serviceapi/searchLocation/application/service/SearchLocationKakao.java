@@ -2,7 +2,7 @@ package com.example.report3.serviceapi.searchLocation.application.service;
 
 import com.example.report3.common.enums.KakaoApiResponseEnum;
 import com.example.report3.common.exception.CommonException;
-import com.example.report3.common.resultcode.CommonApiResultCode;
+import com.example.report3.common.resultcode.ApiResultCodeEnumCode;
 import com.example.report3.serviceapi.searchLocation.application.port.in.SearchLocation;
 import com.example.report3.serviceapi.searchLocation.application.port.in.client.dto.KakaoLocationDto;
 import com.example.report3.serviceapi.searchLocation.application.port.out.SearchLocationPort;
@@ -26,7 +26,7 @@ public class SearchLocationKakao implements SearchLocation {
             searchKakaoLocationResponse = searchLocationPort.getSearchLocationForKakao(keyword);
         } catch (FeignException e) {
             KakaoApiResponseEnum exceptionResult = KakaoApiResponseEnum.getExceptionResult(String.valueOf(e.status()));
-            throw new CommonException(exceptionResult.getDescription(), CommonApiResultCode.COMMON_SUCCESS_WITHOUT_MESSAGE, e.getMessage());
+            throw new CommonException(exceptionResult.getDescription(), ApiResultCodeEnumCode.COMMON_SUCCESS_WITHOUT_MESSAGE, e.getMessage());
         }
         searchKakaoLocationResponse.documents().forEach(documents -> result.add(documents.placeName()));
         return result;

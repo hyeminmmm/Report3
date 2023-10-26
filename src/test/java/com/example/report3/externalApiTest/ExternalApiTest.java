@@ -3,7 +3,7 @@ package com.example.report3.externalApiTest;
 import com.example.report3.common.enums.KakaoApiResponseEnum;
 import com.example.report3.common.enums.NaverApiResponseEnum;
 import com.example.report3.common.exception.CommonException;
-import com.example.report3.common.resultcode.CommonApiResultCode;
+import com.example.report3.common.resultcode.ApiResultCodeEnumCode;
 import com.example.report3.serviceapi.searchLocation.adapter.in.dto.SearchLocationDto;
 import com.example.report3.serviceapi.searchLocation.application.port.in.SearchLocationUseCase;
 import com.example.report3.serviceapi.searchLocation.application.port.in.client.dto.KakaoLocationDto;
@@ -59,7 +59,7 @@ public class ExternalApiTest {
             search = searchLocationKakaoClient.getKakaoLocation(authorization,keyword, 5);
         } catch (FeignException e) {
             KakaoApiResponseEnum exceptionResult = KakaoApiResponseEnum.getExceptionResult(String.valueOf(e.status()));
-            throw new CommonException(exceptionResult.getDescription(), CommonApiResultCode.COMMON_SUCCESS_WITHOUT_MESSAGE, e.getMessage());
+            throw new CommonException(exceptionResult.getDescription(), ApiResultCodeEnumCode.COMMON_SUCCESS_WITHOUT_MESSAGE, e.getMessage());
         }
 
         Assertions.assertEquals(keyword, search.meta().sameName().keyword());
@@ -73,7 +73,7 @@ public class ExternalApiTest {
             naverLocation = searchLocationNaverClient.getNaverLocation(clientId, clientSecret, keyword, 5);
         } catch (FeignException e) {
             NaverApiResponseEnum exceptionResult = NaverApiResponseEnum.getExceptionResult(String.valueOf(e.status()));
-            throw new CommonException(exceptionResult.getDescription(), CommonApiResultCode.COMMON_FAIL_WITHOUT_MESSAGE, e.getMessage());
+            throw new CommonException(exceptionResult.getDescription(), ApiResultCodeEnumCode.COMMON_FAIL_WITHOUT_MESSAGE, e.getMessage());
         }
 
         ObjectMapper objectMapper = new ObjectMapper();

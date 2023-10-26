@@ -1,7 +1,7 @@
 package com.example.report3.serviceapi.searchLocation.adapter.in;
 
 import com.example.report3.common.response.CommonApiResponse;
-import com.example.report3.common.resultcode.CommonApiResultCode;
+import com.example.report3.common.resultcode.ApiResultCodeEnumCode;
 import com.example.report3.serviceapi.searchLocation.adapter.in.dto.SearchLocationDto;
 import com.example.report3.serviceapi.searchLocation.application.port.in.SearchLocationUseCase;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -19,12 +19,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class SearchLocationController {
     private final SearchLocationUseCase searchLocationUseCase;
 
-    @GetMapping("/location")
+    @GetMapping(value = "/location")
     public ResponseEntity<CommonApiResponse<SearchLocationDto.SearchLocationResponse>> getLocations (
             @RequestParam String keyword
     ) throws JsonProcessingException {
         return new ResponseEntity<>(new CommonApiResponse<>(searchLocationUseCase.getSearchLocation(keyword),
-                CommonApiResultCode.COMMON_SUCCESS_WITHOUT_MESSAGE),
+                ApiResultCodeEnumCode.COMMON_SUCCESS_WITHOUT_MESSAGE),
                 HttpStatus.OK);
     }
 

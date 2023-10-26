@@ -2,7 +2,7 @@ package com.example.report3.serviceapi.searchLocation.application.service;
 
 import com.example.report3.common.enums.NaverApiResponseEnum;
 import com.example.report3.common.exception.CommonException;
-import com.example.report3.common.resultcode.CommonApiResultCode;
+import com.example.report3.common.resultcode.ApiResultCodeEnumCode;
 import com.example.report3.serviceapi.searchLocation.application.port.in.SearchLocation;
 import com.example.report3.serviceapi.searchLocation.application.port.in.client.dto.NaverLocationDto;
 import com.example.report3.serviceapi.searchLocation.application.port.out.SearchLocationPort;
@@ -29,7 +29,7 @@ public class SearchLocationNaver implements SearchLocation {
             naverLocationString = searchLocationPort.getSearchLocationForNaver(keyword);
         } catch (FeignException e) {
             NaverApiResponseEnum exceptionResult = NaverApiResponseEnum.getExceptionResult(String.valueOf(e.status()));
-            throw new CommonException(exceptionResult.getDescription(), CommonApiResultCode.COMMON_FAIL_WITHOUT_MESSAGE, e.getMessage());
+            throw new CommonException(exceptionResult.getDescription(), ApiResultCodeEnumCode.COMMON_FAIL_WITHOUT_MESSAGE, e.getMessage());
         }
 
         ObjectMapper objectMapper = new ObjectMapper();

@@ -2,37 +2,34 @@ package com.example.report3.serviceapi.searchLocation.application.port.in.client
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class KakaoLocationDto {
-    public record SearchKakaoLocationResponse(
+public record SearchKakaoLocationResponse (
         Meta meta,
         List<Documents> documents
     ) {
         public record Meta(
-            @JsonProperty("total_count")
-            Integer totalCount,
+                @JsonProperty("total_count")
+                Integer totalCount,
 
-            @JsonProperty("pageableCount")
-            Integer pageableCount,
+                @JsonProperty("pageableCount")
+                Integer pageableCount,
 
-            @JsonProperty("is_end")
-            Boolean isEnd,
+                @JsonProperty("is_end")
+                Boolean isEnd,
 
-            @JsonProperty("same_name")
-            SameName sameName
+                @JsonProperty("same_name")
+                SameName sameName
         ) {
             public record SameName(
-                List<String> region,
-                String keyword,
+                    List<String> region,
+                    String keyword,
 
-                @JsonProperty("selectedRegion")
-                String selectedRegion
-            ) {}
+                    @JsonProperty("selectedRegion")
+                    String selectedRegion
+            ) {
+            }
         }
 
         public record Documents(
@@ -65,8 +62,5 @@ public class KakaoLocationDto {
                 String placeUrl,
 
                 String distance
-        ) {
-        }
-    }
-
+        ) {}
 }

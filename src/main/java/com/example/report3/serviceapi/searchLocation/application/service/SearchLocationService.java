@@ -1,49 +1,57 @@
 package com.example.report3.serviceapi.searchLocation.application.service;
 
-import com.example.report3.serviceapi.searchLocation.adapter.in.dto.SearchLocationDto;
+import com.example.report3.common.exception.FailExternalApiRequestException;
+import com.example.report3.common.exception.NoParsingException;
+import com.example.report3.serviceapi.searchLocation.adapter.in.dto.SearchLocationResponse;
 import com.example.report3.serviceapi.searchLocation.application.port.in.SearchLocation;
 import com.example.report3.serviceapi.searchLocation.application.port.in.SearchLocationUseCase;
+import com.example.report3.serviceapi.searchLocation.application.port.in.client.dto.LocationsDto;
 import com.example.report3.serviceapi.searchLocation.application.port.out.SearchLocationPort;
-import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
 public class SearchLocationService implements SearchLocationUseCase {
     private final SearchLocationPort searchLocationPort;
-    public SearchLocationDto.SearchLocationResponse getSearchLocation(String keyword) throws JsonProcessingException {
+
+    //    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
+    public SearchLocationResponse getSearchLocation(String keyword) throws NoParsingException, FailExternalApiRequestException {
         SearchLocation searchLocationKakao = new SearchLocationKakao(searchLocationPort);
-        List<String> kakaoLocations = searchLocationKakao.getSearchLocation(keyword);
+        LocationsDto kakaoLocations = searchLocationKakao.getSearchLocation(keyword);
 
-        SearchLocation searchLocationNaver = new SearchLocationNaver(searchLocationPort);
-        List<String> naverLocations = searchLocationNaver.getSearchLocation(keyword);
+        SearchLocation searchLocationNaver = new SearchLocationNaver(searchLocationPort, new ObjectMapper());
+        LocationsDto naverLocations = searchLocationNaver.getSearchLocation(keyword);
 
-        return new SearchLocationDto.SearchLocationResponse(getLocationResult(kakaoLocations, naverLocations));
+        return new SearchLocationResponse(getLocationResult(kakaoLocations, naverLocations));
     }
 
-    private List<String> getLocationResult(List<String> kakaoLocations, List<String> naverLocations) {
-        int num = 0;
-        List<String> result = new ArrayList<>();
+    private Set<String> getLocationResult(LocationsDto kakaoLocations, LocationsDto naverLocations) {
+        Set<String> result = new LinkedHashSet<>();
 
-        for (String kakaoLocation: kakaoLocations) {
-            if(naverLocations.contains(kakaoLocation)) {
-                result.add(kakaoLocation);
-                naverLocations.remove(kakaoLocation);
-            } else {
-                naverLocations.add(num, kakaoLocation);
-                num++;
+        for (int i = 0; i < kakaoLocations.mapxyList().size(); i++) {
+            if(naverLocations.mapxySet().contains(kakaoLocations.mapxyList().get(i))) {
+                result.add(kakaoLocations.places().get(i));
             }
         }
-        naverLocations.forEach(naverLocation -> {
-            if(result.size() >= 10) return;
 
-            result.add(naverLocation);
-        });
+        for (int i = 0; i < kakaoLocations.places().size(); i++) {
+            if (result.size() >= 10) return result;
+            if (!result.contains(kakaoLocations.places().get(i))) {
+                result.add(kakaoLocations.places().get(i));
+            }
+        }
 
+        for (int i = 0; i < naverLocations.placeNameSet().size(); i++) {
+            if (result.size() >= 10) return result;
+            if (!result.contains(naverLocations.places().get(i))) {
+                result.add(naverLocations.places().get(i));
+            }
+        }
         return result;
     }
 }

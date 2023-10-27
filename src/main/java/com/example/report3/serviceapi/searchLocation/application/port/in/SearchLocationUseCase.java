@@ -1,8 +1,9 @@
 package com.example.report3.serviceapi.searchLocation.application.port.in;
 
-import com.example.report3.serviceapi.searchLocation.adapter.in.dto.SearchLocationDto;
-import com.fasterxml.jackson.core.JsonProcessingException;
+import com.example.report3.common.exception.FailExternalApiRequestException;
+import com.example.report3.common.exception.NoParsingException;
+import com.example.report3.serviceapi.searchLocation.adapter.in.dto.SearchLocationResponse;
 
 public interface SearchLocationUseCase {
-    SearchLocationDto.SearchLocationResponse getSearchLocation(String keyword) throws JsonProcessingException;
+    SearchLocationResponse getSearchLocation(String keyword) throws NoParsingException, FailExternalApiRequestException;
 }

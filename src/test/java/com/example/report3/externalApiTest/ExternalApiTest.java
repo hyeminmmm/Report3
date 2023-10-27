@@ -3,11 +3,13 @@ package com.example.report3.externalApiTest;
 import com.example.report3.common.enums.KakaoApiResponseEnum;
 import com.example.report3.common.enums.NaverApiResponseEnum;
 import com.example.report3.common.exception.CommonException;
+import com.example.report3.common.exception.FailExternalApiRequestException;
+import com.example.report3.common.exception.NoParsingException;
 import com.example.report3.common.resultcode.ApiResultCodeEnumCode;
-import com.example.report3.serviceapi.searchLocation.adapter.in.dto.SearchLocationDto;
+import com.example.report3.serviceapi.searchLocation.adapter.in.dto.SearchLocationResponse;
 import com.example.report3.serviceapi.searchLocation.application.port.in.SearchLocationUseCase;
-import com.example.report3.serviceapi.searchLocation.application.port.in.client.dto.KakaoLocationDto;
-import com.example.report3.serviceapi.searchLocation.application.port.in.client.dto.NaverLocationDto;
+import com.example.report3.serviceapi.searchLocation.application.port.in.client.dto.SearchKakaoLocationResponse;
+import com.example.report3.serviceapi.searchLocation.application.port.in.client.dto.SearchNaverLocationResponse;
 import com.example.report3.serviceapi.searchLocation.application.port.in.client.kakao.SearchLocationKakaoClient;
 import com.example.report3.serviceapi.searchLocation.application.port.in.client.naver.SearchLocationNaverClient;
 import com.example.report3.serviceapi.searchLocation.application.port.out.SearchLocationPort;
@@ -53,7 +55,7 @@ public class ExternalApiTest {
     @Test
     public void 카카오검색api() {
         String authorization = "KakaoAK " + apiKey;
-        KakaoLocationDto.SearchKakaoLocationResponse search;
+        SearchKakaoLocationResponse search;
         String keyword = "곱창";
         try {
             search = searchLocationKakaoClient.getKakaoLocation(authorization,keyword, 5);
@@ -77,7 +79,7 @@ public class ExternalApiTest {
         }
 
         ObjectMapper objectMapper = new ObjectMapper();
-        NaverLocationDto.SearchNaverLocationResponse searchNaverLocationResponse = objectMapper.readValue(naverLocation, NaverLocationDto.SearchNaverLocationResponse.class);
+        SearchNaverLocationResponse searchNaverLocationResponse = objectMapper.readValue(naverLocation, SearchNaverLocationResponse.class);
         Assertions.assertEquals(5, searchNaverLocationResponse.display());
     }
 
@@ -120,9 +122,9 @@ public class ExternalApiTest {
     }
 
     @Test
-    public void 통합테스트() throws JsonProcessingException {
+    public void 통합테스트() throws JsonProcessingException, NoParsingException, FailExternalApiRequestException {
         String keyword = "곱창";
-        SearchLocationDto.SearchLocationResponse searchLocation = searchLocationUseCase.getSearchLocation(keyword);
+        SearchLocationResponse searchLocation = searchLocationUseCase.getSearchLocation(keyword);
 
         log.info(searchLocation.locations().toString());
     }

@@ -1,10 +1,11 @@
 package com.example.report3.serviceapi.searchLocation.adapter.in;
 
+import com.example.report3.common.exception.FailExternalApiRequestException;
+import com.example.report3.common.exception.NoParsingException;
 import com.example.report3.common.response.CommonApiResponse;
 import com.example.report3.common.resultcode.ApiResultCodeEnumCode;
-import com.example.report3.serviceapi.searchLocation.adapter.in.dto.SearchLocationDto;
+import com.example.report3.serviceapi.searchLocation.adapter.in.dto.SearchLocationResponse;
 import com.example.report3.serviceapi.searchLocation.application.port.in.SearchLocationUseCase;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,9 +21,9 @@ public class SearchLocationController {
     private final SearchLocationUseCase searchLocationUseCase;
 
     @GetMapping(value = "/location")
-    public ResponseEntity<CommonApiResponse<SearchLocationDto.SearchLocationResponse>> getLocations (
+    public ResponseEntity<CommonApiResponse<SearchLocationResponse>> getLocations (
             @RequestParam String keyword
-    ) throws JsonProcessingException {
+    ) throws NoParsingException, FailExternalApiRequestException {
         return new ResponseEntity<>(new CommonApiResponse<>(searchLocationUseCase.getSearchLocation(keyword),
                 ApiResultCodeEnumCode.COMMON_SUCCESS_WITHOUT_MESSAGE),
                 HttpStatus.OK);

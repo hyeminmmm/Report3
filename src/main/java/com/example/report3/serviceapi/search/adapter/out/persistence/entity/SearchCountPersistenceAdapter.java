@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -18,5 +19,10 @@ public class SearchCountPersistenceAdapter implements SearchCountPort {
     @Override
     public void saveSearchCount(SearchCountEntity searchCountEntity) {
         searchCountRepository.save(searchCountEntity);
+    }
+
+    @Override
+    public Optional<SearchCountEntity> getSearchCountForUpdate(String keyword) {
+        return searchCountRepository.findByKeyword(keyword);
     }
 }

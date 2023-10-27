@@ -1,17 +1,16 @@
 package com.example.report3.serviceapi.searchLocation.application.service;
 
 import com.example.report3.common.enums.KakaoApiResponseEnum;
-import com.example.report3.common.exception.CommonException;
-import com.example.report3.common.resultcode.ApiResultCodeEnumCode;
+import com.example.report3.common.exception.FailExternalApiRequestException;
 import com.example.report3.serviceapi.searchLocation.application.port.in.SearchLocation;
-import com.example.report3.serviceapi.searchLocation.application.port.in.client.dto.KakaoLocationDto;
+import com.example.report3.serviceapi.searchLocation.application.port.in.client.dto.LocationsDto;
+import com.example.report3.serviceapi.searchLocation.application.port.in.client.dto.SearchKakaoLocationResponse;
 import com.example.report3.serviceapi.searchLocation.application.port.out.SearchLocationPort;
 import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -19,16 +18,30 @@ public class SearchLocationKakao implements SearchLocation {
     private final SearchLocationPort searchLocationPort;
 
     @Override
-    public List<String> getSearchLocation(String keyword) {
-        List<String> result = new ArrayList<>();
-        KakaoLocationDto.SearchKakaoLocationResponse searchKakaoLocationResponse;
+    public LocationsDto getSearchLocation(String keyword) throws FailExternalApiRequestException {
+        Set<String> mapxySet = new LinkedHashSet<>();
+        List<String> mapxyList = new ArrayList<>();
+        List<String> places = new ArrayList<>();
+        Set<String> placeNameSet = new LinkedHashSet<>();
+
+        SearchKakaoLocationResponse searchKakaoLocationResponse;
         try {
             searchKakaoLocationResponse = searchLocationPort.getSearchLocationForKakao(keyword);
         } catch (FeignException e) {
             KakaoApiResponseEnum exceptionResult = KakaoApiResponseEnum.getExceptionResult(String.valueOf(e.status()));
-            throw new CommonException(exceptionResult.getDescription(), ApiResultCodeEnumCode.COMMON_SUCCESS_WITHOUT_MESSAGE, e.getMessage());
+            throw new FailExternalApiRequestException(exceptionResult.getDescription());
         }
-        searchKakaoLocationResponse.documents().forEach(documents -> result.add(documents.placeName()));
-        return result;
+
+        for (int i = 0; i < searchKakaoLocationResponse.documents().size(); i++) {
+            String place = searchKakaoLocationResponse.documents().get(i).placeName();
+            String mapx = searchKakaoLocationResponse.documents().get(i).x().replaceAll("\\.", "").substring(0, 9);
+            String mapy = searchKakaoLocationResponse.documents().get(i).y().replaceAll("\\.", "").substring(0, 9);
+            mapxySet.add(mapx + "," + mapy);
+            mapxyList.add(mapx + "," + mapy);
+            places.add(searchKakaoLocationResponse.documents().get(i).placeName());
+            placeNameSet.add(place);
+        }
+
+        return new LocationsDto(mapxySet, mapxyList, places, placeNameSet);
     }
 }

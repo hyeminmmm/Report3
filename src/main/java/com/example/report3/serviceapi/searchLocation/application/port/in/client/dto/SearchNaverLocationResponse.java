@@ -1,23 +1,8 @@
 package com.example.report3.serviceapi.searchLocation.application.port.in.client.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-
 import java.util.List;
 
-@NoArgsConstructor
-@Getter
-public class NaverLocationDto {
-    public record parseTest(
-            String test
-    ) {
-
-    }
-    public record SearchNaverLocationResponse(
-
+public record SearchNaverLocationResponse (
         Integer total,
         String lastBuildDate,
         Integer display,
@@ -35,5 +20,4 @@ public class NaverLocationDto {
             String mapx,
             String mapy
             ) {}
-    }
 }

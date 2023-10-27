@@ -1,6 +1,6 @@
 package com.example.report3.serviceapi.searchLocation.adapter.out;
 
-import com.example.report3.serviceapi.searchLocation.application.port.in.client.dto.KakaoLocationDto;
+import com.example.report3.serviceapi.searchLocation.application.port.in.client.dto.SearchKakaoLocationResponse;
 import com.example.report3.serviceapi.searchLocation.application.port.in.client.kakao.SearchLocationKakaoClient;
 import com.example.report3.serviceapi.searchLocation.application.port.in.client.naver.SearchLocationNaverClient;
 import com.example.report3.serviceapi.searchLocation.application.port.out.SearchLocationPort;
@@ -24,7 +24,7 @@ public class SearchLocationAdapter implements SearchLocationPort {
     String clientSecret;
 
     @Override
-    public KakaoLocationDto.SearchKakaoLocationResponse getSearchLocationForKakao(String keyword) {
+    public SearchKakaoLocationResponse getSearchLocationForKakao(String keyword) {
         return searchLocationKakaoClient.getKakaoLocation("KakaoAK " + apiKey, keyword, 5);
     }
 

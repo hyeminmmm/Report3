@@ -5,4 +5,5 @@ import com.example.report3.serviceapi.searchLocation.application.port.in.client.
 public interface SearchLocationPort {
     SearchKakaoLocationResponse getSearchLocationForKakao(String keyword);
     String getSearchLocationForNaver(String keyword);
+    void saveSearchCount(String keyword);
 }

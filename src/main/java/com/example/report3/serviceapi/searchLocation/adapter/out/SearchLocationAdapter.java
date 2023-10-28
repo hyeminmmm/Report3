@@ -1,5 +1,6 @@
 package com.example.report3.serviceapi.searchLocation.adapter.out;
 
+import com.example.report3.serviceapi.search.application.port.in.SearchCountUseCase;
 import com.example.report3.serviceapi.searchLocation.application.port.in.client.dto.SearchKakaoLocationResponse;
 import com.example.report3.serviceapi.searchLocation.application.port.in.client.kakao.SearchLocationKakaoClient;
 import com.example.report3.serviceapi.searchLocation.application.port.in.client.naver.SearchLocationNaverClient;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Component;
 public class SearchLocationAdapter implements SearchLocationPort {
     private final SearchLocationKakaoClient searchLocationKakaoClient;
     private final SearchLocationNaverClient searchLocationNaverClient;
+    private final SearchCountUseCase searchCountUseCase;
 
     @Value("${external-api.kakao.api-key}")
     String apiKey;
@@ -32,4 +34,10 @@ public class SearchLocationAdapter implements SearchLocationPort {
     public String getSearchLocationForNaver(String keyword) {
         return searchLocationNaverClient.getNaverLocation(clientId, clientSecret, keyword, 5);
     }
+
+    @Override
+    public void saveSearchCount(String keyword) {
+        searchCountUseCase.saveSearchCount(keyword);
+    }
+
 }

@@ -11,9 +11,10 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class SearchCountPersistenceAdapter implements SearchCountPort {
     private final SearchCountRepository searchCountRepository;
+    private final SearchCountViewRepository searchCountViewRepository;
     @Override
-    public List<SearchCountEntity> getSearchCountTop10() {
-        return searchCountRepository.findTop10ByOrderByCountDesc();
+    public List<SearchCountViewEntity> getSearchCountTop10() {
+        return searchCountViewRepository.findTop10ByOrderByCountDesc();
     }
 
     @Override
@@ -22,7 +23,17 @@ public class SearchCountPersistenceAdapter implements SearchCountPort {
     }
 
     @Override
+    public void saveSearchViewCount(SearchCountViewEntity searchCountViewEntity) {
+        searchCountViewRepository.save(searchCountViewEntity);
+    }
+
+    @Override
     public Optional<SearchCountEntity> getSearchCountForUpdate(String keyword) {
         return searchCountRepository.findByKeyword(keyword);
+    }
+
+    @Override
+    public Optional<SearchCountViewEntity> getSearchCountView(String keyword) {
+        return searchCountViewRepository.findByKeyword(keyword);
     }
 }

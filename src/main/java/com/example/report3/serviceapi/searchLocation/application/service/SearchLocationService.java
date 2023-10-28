@@ -19,13 +19,14 @@ import java.util.Set;
 public class SearchLocationService implements SearchLocationUseCase {
     private final SearchLocationPort searchLocationPort;
 
-    //    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
     public SearchLocationResponse getSearchLocation(String keyword) throws NoParsingException, FailExternalApiRequestException {
         SearchLocation searchLocationKakao = new SearchLocationKakao(searchLocationPort);
         LocationsDto kakaoLocations = searchLocationKakao.getSearchLocation(keyword);
 
         SearchLocation searchLocationNaver = new SearchLocationNaver(searchLocationPort, new ObjectMapper());
         LocationsDto naverLocations = searchLocationNaver.getSearchLocation(keyword);
+
+        searchLocationPort.saveSearchCount(keyword);
 
         return new SearchLocationResponse(getLocationResult(kakaoLocations, naverLocations));
     }

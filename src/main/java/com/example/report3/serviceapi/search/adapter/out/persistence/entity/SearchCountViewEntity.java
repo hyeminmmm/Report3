@@ -7,21 +7,23 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "search_count")
+@Table(name = "search_count_view")
 @NoArgsConstructor
-public class SearchCountEntity {
+public class SearchCountViewEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long searchCountSeq;
+    private long searchCountViewSeq;
 
     @Getter
     private String keyword;
+
     @Getter
     private long count;
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
 
-    public SearchCountEntity(String keyword, long count) {
+    public SearchCountViewEntity(String keyword, long count) {
         this.keyword = keyword;
         this.count = count;
         this.createdDate = LocalDateTime.now();

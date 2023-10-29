@@ -23,7 +23,7 @@
 - okhttp : Feign Client Configuration 설정 시 사용
 - json-simple : 네이버 api 조회 시 json 파싱 기능 사용
 
-### 테스트 방법
+### 프로젝트 실행 방법
 - 프로젝트 clone
 - docs.sql 파일에 있는 ddl을 이용해 테이블 및 unique key, index 생성
 - 프로젝트 빌드 후 curl을 이용해 api 실행
@@ -33,3 +33,8 @@
 localhost:8080/v1/report/location?keyword=카카오
 - 인기 키워드 조회 curl :
 localhost:8080/v1/search/count
+
+### 테스트 코드
+- ExternalApiTest.java, SaveSearchCountTest.java
+- ExternalApiTest.java : 카카오/네이버 api 연동 및 예외처리 테스트, 키워드 검색 통합 테스트
+- SaveSearchCountTest.java : 키워드 검색 시 조회 수 저장 테스트

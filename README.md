@@ -29,7 +29,7 @@
 - 프로젝트 빌드 후 curl을 이용해 api 실행
 
 ### CURL
-- 키워드 검색 curl 
+- 키워드 검색 curl :
 localhost:8080/v1/report/location?keyword=카카오
-- 인기 키워드 조회 curl
-  localhost:8080/v1/search/count
+- 인기 키워드 조회 curl :
+localhost:8080/v1/search/count

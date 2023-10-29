@@ -84,44 +84,6 @@ public class ExternalApiTest {
     }
 
     @Test
-    public void 검색알고리즘() {
-        List<String> kakaoLocations = new ArrayList<>();
-        List<String> naverLocations = new LinkedList<>();
-        List<String> result = new ArrayList<>();
-
-        kakaoLocations.add("카카오뱅크");
-        kakaoLocations.add("우리은행");
-        kakaoLocations.add("국민은행");
-        kakaoLocations.add("부산은행");
-        kakaoLocations.add("새마을금고");
-
-        naverLocations.add("카카오뱅크");
-        naverLocations.add("부산은행");
-        naverLocations.add("하나은행");
-        naverLocations.add("국민은행");
-        naverLocations.add("기업은행");
-
-        int num = 0;
-
-        for (String kakaoLocation: kakaoLocations) {
-            if(naverLocations.contains(kakaoLocation)) {
-                result.add(kakaoLocation);
-                naverLocations.remove(kakaoLocation);
-            } else {
-                naverLocations.add(num, kakaoLocation);
-                num++;
-            }
-        }
-        naverLocations.forEach(naverLocation -> {
-            if(result.size() >= 10) return;
-
-            result.add(naverLocation);
-        });
-
-        Assertions.assertEquals(result.get(0), "카카오뱅크");
-    }
-
-    @Test
     public void 통합테스트() throws JsonProcessingException, NoParsingException, FailExternalApiRequestException {
         String keyword = "곱창";
         SearchLocationResponse searchLocation = searchLocationUseCase.getSearchLocation(keyword);

@@ -19,3 +19,5 @@ create table search_count_view (
 alter table search_count add unique key uniqueKeyword(keyword);
 
 alter table search_count_view add unique key uniqueKeyword(keyword);
+
+create index IDX_keyword on search_count_view(keyword);
